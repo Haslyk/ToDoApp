@@ -1,0 +1,35 @@
+extends ../main-layouts/header.pug
+
+block cssLink 
+  link(rel='stylesheet' href='/css/style.css')
+
+block title 
+  title Login
+  if (message)
+    .alert.alert-danger(role='alert')
+      h4 #{message}
+  .container.d-flex
+    .logo
+      img(src='/img/logo.png' alt='aktekbilisim')
+    .form
+      form(action='' method='POST')
+        .title
+          h1 Giriş Yap
+        
+        .mb-4
+          label.form-label(for='email') Email
+          .inputTags
+            input.form-control.input(type='email' required placeholder='Email...' name='mail')
+            button.form-control.font(disabled)
+              i.fa-solid.fa-envelope
+        .mb-4
+          label.form-label(for='password') Password
+          .inputTags
+            input.form-control.input(type='password' required placeholder='Password...' name='password')
+            button.form-control.font(disabled)
+              i.fa-solid.fa-key
+        .button
+          input.form-control.input.btn.btn-primary.w-50(type='submit' value='Giriş Yap')
+        .links
+          a(href="register") Kayıt Ol
+          a(href='#') Şifreni mi unuttun?

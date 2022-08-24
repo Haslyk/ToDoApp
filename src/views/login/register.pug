@@ -1,0 +1,55 @@
+extends ../main-layouts/header.pug
+
+block cssLink 
+  link(rel='stylesheet' href='/css/style.css')
+
+block title 
+  title Register
+  if (message)
+    if(success == false)
+      .alert.alert-danger(role='alert')
+        h5 #{message}
+    if(success == true)
+      .alert.alert-success(role='alert')
+        h5 #{message}
+  .container.d-flex
+    .logo
+      img(src='/img/logo.png' alt='')
+    .form
+      form(action='' method='POST')
+        .title
+          h1 Kayıt Ol
+        .mb-2
+          label.form-label(for='email') Tam Adınız
+          .inputTags
+            input.form-control.input(type='text' required placeholder='Tam Adınız...' name='fullName')
+            button.form-control.font(disabled)
+              i.fa-solid.fa-user
+        .mb-2
+          label.form-label(for='email') Email
+          .inputTags
+            input.form-control.input(type='email' required  placeholder='Email...' name='mail')
+            button.form-control.font(disabled)
+              i.fa-solid.fa-envelope
+        .mb-2
+          label.form-label(for='password') Password
+          .inputTags
+            input.form-control.input(type='password' required placeholder='Password...' name='password')
+            button.form-control.font(disabled)
+              i.fa-solid.fa-key
+        .mb-2
+          label.form-label(for='email') Linkedin
+          .inputTags
+            input.form-control.input(type='text' placeholder='Profil Linki...' name='linkedinLink')
+            button.form-control.font(disabled)
+              i.fa-brands.fa-linkedin
+        .mb-2
+          label.form-label(for='email') Github
+          .inputTags
+            input.form-control.input(type='text' placeholder='Profil Linki...' name='githubLink')
+            button.form-control.font(disabled)
+              i.fa-brands.fa-github
+        .button
+          input.form-control.input.btn.btn-primary.w-50(type='submit' value='Kayıt Ol')
+        .links
+          a(href="login") Giriş Yap

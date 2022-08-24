@@ -1,0 +1,31 @@
+extends ../main-layouts/header.pug
+
+block cssLink 
+  link(rel='stylesheet' href='/css/arayuz.css')
+
+block title 
+    title Teams
+    
+    include ../main-layouts/navbar.pug 
+    section.container
+        h1 Yazılım Geliştirme
+        hr
+        .row
+            each data in datas
+                .col-md-3.mb-5.col-sm-6
+                    .our-team 
+                        .pic 
+                            img(src=`/img/${data.photo}`)
+                        h3.title #{data.fullName}
+                        span.post Developer
+                        ul.social
+                            li
+                                a(href=`https://${data.linkedinLink}` target='_blank')
+                                    i.fa-brands.fa-linkedin
+                            li
+                                a(href=`https://${data.githubLink}` target='_blank')
+                                    i.fa-brands.fa-github
+                            li
+                                a(href=`mailto://${data.mail}` target='_blank')
+                                    i.fa-solid.fa-envelope
+            

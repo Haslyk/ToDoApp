@@ -1,0 +1,81 @@
+body {
+    background-image: url('../img/arkaplan.jpg');
+    background-position: center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.container {
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    width: 40%;
+}
+.logo img {
+    width: 100%;
+}
+
+
+.form {
+    width: 40%;
+    padding: 5%;
+    background-color: rgb(236, 236, 236, .3);
+    box-shadow:  20px 20px 60px #e7e7e7,
+             -20px -20px 60px #93af4d;
+    border-radius: 10px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 15%;
+}
+.title h1 {
+    font-weight: 700;
+}
+.inputTags {
+    display: flex;
+}
+
+.inputTags .input {
+    width: 90%;
+    border-radius: 8% 0 0 8%;
+}
+.inputTags .font {
+    display: flex;
+    width: 10%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 8px 8px 0;
+}
+
+
+.button {
+    margin-top: 15%;
+    text-align: center;
+}
+.button button {
+    width: 50%;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.links {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10%;
+}
+.links a {
+    color: blue;
+}
+
+.links a:hover {
+    text-decoration: none;
+}
+
