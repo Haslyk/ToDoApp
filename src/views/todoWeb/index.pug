@@ -20,12 +20,12 @@ block title
               li.list-group-item
                 a(href='#') Tümünü Göster
               li.list-group-item
-                a(href='#') Tamamlanmış;
+                a(href='#') Tamamlanmış
               li.list-group-item
-                a(href='#') Tamamlanmamış;
+                a(href='#') Tamamlanmamış
         .scroll-area-sm
           perfect-scrollbar.ps-show-limits
-            .ps.ps--active-y(style='position: static;')
+            .ps.ps--active-y(style='position: static')
               .ps-content
                 ul.list-group.list-group-flush
                   li.list-group-item
@@ -41,6 +41,11 @@ block title
                         .widget-content-right
                           button.border-0.btn-transition.btn.btn-outline-success
                             i.fa.fa-check
+                          if(data.isAdmin == true)
+                            button.border-0.btn-transition.btn.btn-outline-warning
+                              i.fa.fa-pen
+                            button.border-0.btn-transition.btn.btn-outline-danger
+                              i.fa.fa-trash
                   li.list-group-item
                     .todo-indicator.bg-danger
                     .widget-content.p-0
@@ -53,6 +58,11 @@ block title
                         .widget-content-right
                           button.border-0.btn-transition.btn.btn-outline-success
                             i.fa.fa-check
+                          if(data.isAdmin == true)
+                            button.border-0.btn-transition.btn.btn-outline-warning
+                              i.fa.fa-pen
+                            button.border-0.btn-transition.btn.btn-outline-danger
+                              i.fa.fa-trash
                   li.list-group-item(style='background-color: #81CACF;')
                     .todo-indicator.bg-success
                     .widget-content.p-0
@@ -65,3 +75,11 @@ block title
                         .widget-content-right
                           button.border-0.btn-transition.bg-success.text-light.btn.btn-outline-success
                             i.fa.fa-check
+                          if(data.isAdmin == true)
+                            button.border-0.btn-transition.btn.btn-outline-warning
+                              i.fa.fa-pen
+                            button.border-0.btn-transition.btn.btn-outline-danger
+                              i.fa.fa-trash
+        if(data.isAdmin== true)
+          div.d-block.text-center.card-footer
+            button.btn.btn-primary Görev Ekle

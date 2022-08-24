@@ -17,6 +17,7 @@ const userGet = async (req,res) => {
     const {id} = req.params
     try {
         const userGet = await userModel.findById(id)
+        console.log(userGet)
         return res.render('todoWeb/index' , {id : req.params.id , data : userGet} )
         
     } catch (error) {
