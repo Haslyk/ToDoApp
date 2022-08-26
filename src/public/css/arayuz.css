@@ -158,6 +158,19 @@ i {
     background-color: #f7b924 !important;
 }
 
+.complated {
+    background-color: #81CACF;
+}
+
+.complated .widget-heading {
+    text-decoration: line-through;
+}
+
+.complated .btn-outline-success {
+    background-color: #3ac47d;
+    color: #fff;
+}
+
 .widget-content {
     padding: 1rem;
     flex-direction: row;
@@ -215,6 +228,22 @@ i {
     position: relative;
     transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
     outline: none !important;
+}
+
+/* Task Popup */
+
+.modal-body .inputTags {
+    display: flex;
+}
+.modal-body .inputTags input, .modal-body .inputTags select {
+    width: 90%;
+}
+.modal-body .inputTags button {
+    width: 10%;
+}
+
+.modal-body .inputTags select {
+    padding-left: 2%;
 }
 
 
@@ -302,3 +331,6 @@ i {
   }
 
 
+
+
+  

@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended : false}))
 
 
-app.use('/user' , user)
+app.use('/' , user)
 app.use('/homepage', homepage)
 
 
@@ -28,7 +28,7 @@ app.use(express.static("."));
 
 
 app.get('/', (req,res) => {
-    res.send("Merhabalar")
+    res.render('login/login')
 })
 
 
@@ -38,4 +38,4 @@ app.listen(port, () => {
 })
 
 
-//linkleri düzenlemem lazım router da yönlendirirken userGet te index verdim salak gibi
+//complate yapılacak
