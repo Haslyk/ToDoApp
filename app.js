@@ -4,10 +4,6 @@ const app = express()
 require('dotenv').config()
 require('./src/config/dbConnection')
 const session = require('express-session')
-const bodyParse = require('body-parser')
-const multer = require('multer')
-const fs = require('fs')
-const imageModel = require('./src/model/taskfileModel')
 
 
 app.use(session({

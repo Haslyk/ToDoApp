@@ -1,9 +1,6 @@
 const taskModel = require('../model/taskModel')
 const userModel = require('../model/userModel')
-const imgModel = require('../model/taskfileModel')
-const bodyParser = require('body-parser')
 const fs = require('fs')
-const path = require('path')
 
 const taskAdd = async (req,res) => {
     const {id} = req.params
