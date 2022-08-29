@@ -3,9 +3,23 @@ const path = require('path')
 const app = express()
 require('dotenv').config()
 require('./src/config/dbConnection')
+const session = require('express-session')
+const bodyParse = require('body-parser')
+const multer = require('multer')
+const fs = require('fs')
+const imageModel = require('./src/model/taskfileModel')
+
+
+app.use(session({
+    secret : "mykeytodoapp",
+    resave : false,
+    saveUninitialized : true
+}))
 
 app.set("view engine", "pug")
 app.set("views", "./src/views")
+
+
 
 const port = process.env.PORT || 5001
 
@@ -16,15 +30,15 @@ app.use(express.json())
 app.use(express.urlencoded({extended : false}))
 
 
+
+
 app.use('/' , user)
 app.use('/homepage', homepage)
-
 
 
 app.use(express.static(__dirname + '/src/public'));
 app.use(express.static(__dirname + '/src/views'));
 app.use(express.static("."));
-
 
 
 app.get('/', (req,res) => {
@@ -37,5 +51,3 @@ app.listen(port, () => {
     console.log(`Server ${port} portundan çalışıyor `)
 })
 
-
-//complate yapılacak

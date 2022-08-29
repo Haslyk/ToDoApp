@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const taskSchema = new mongoose.Schema({
+    title : {
+        type : String,
+        required : true,
+        trim : true
+    },
     description : {
         type : String,
         required : true,
@@ -14,6 +19,15 @@ const taskSchema = new mongoose.Schema({
     complete : {
         type : Boolean,
         default : false
+    },
+    photo : {
+        type : String,
+        default : null,
+        trim : true
+    },
+    img : {
+        data : Buffer, 
+        contentType : String
     }
     
 }, {collection : "tasks", timestamps: true})

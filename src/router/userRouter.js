@@ -7,6 +7,7 @@ router.get('/register', (req,res) => {
 router.post('/register', loginController.userAdd)
 
 router.get('/login', (req,res) => {
+    req.session.destroy()
     res.render('login/login')
 })
 

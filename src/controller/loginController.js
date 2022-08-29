@@ -1,5 +1,4 @@
 const userModel = require('../model/userModel')
-const router = require('../router/userRouter')
 
 const userAdd = async (req,res) => {
     try {
@@ -28,9 +27,11 @@ const userCheck = async (req,res) => {
     try {
         const _user = await userModel.findOne({"mail" : req.body.mail})
         console.log("Login kontrolu yapıldı")
+        
         if(_user){
             if(_user.password == req.body.password) {
-                return res.redirect('/homepage/index/' + _user.id)
+                req.session.userId = _user._id
+                return res.redirect('/homepage/index/' + req.session.userId)
             }
             else {
                 return res.render('login/login', {success : false, message : "Hatalı giriş yaptınız..."})

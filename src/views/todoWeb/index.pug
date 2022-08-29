@@ -16,13 +16,18 @@ block title
         .card-header-tab.card-header.h-10
           .card-header-title.font-size-lg.text-capitalize.font-weight-normal.p-3
             i.fa.fa-tasks
-            | &nbsp; Yapılacaklar Listesi #{datas}
+            | &nbsp; Yapılacaklar Listesi
+          .card-header-title.font-size-lg.text-capitalize.font-weight-normal.p-3.justify-content-around
+            button.btn.btn-primary(onclick='allTask()' ) Tümünü Gör 
+            button.btn.btn-success(onclick='complatedTask()' ) Tamamlanandı
+            button.btn.btn-secondary(onclick='notcomplatedTask()' ) Tamamlanmadı
             
         .scroll-area-sm
           perfect-scrollbar.ps-show-limits
             .ps.ps--active-y(style='position: static')
               .ps-content
-                ul.list-group.list-group-flush
+
+                ul.list-group.list-group-flush(id='allTask')
                   each task in tasks
                     if(task.complete == true)
                       li.list-group-item.complated
@@ -31,13 +36,241 @@ block title
                           .widget-content-wrapper
                             .widget-content-left
                               .widget-heading
-                                | #{task.description}
+                                | #{task.title}
                                 .badge.badge-success.ml-2 
                                   | Tamamlandı
                               .widget-subheading
                                 i Görevden Sorumlu : #{task.employee}
                             .widget-content-right
-                              if(data.fullName == task.employee || data.isAdmin == true)
+                              if(task.employee.includes(data.fullName) || data.isAdmin == true)
+                                button.border-0.btn-transition.btn.btn-outline-success(type='button' data-bs-toggle='modal' data-bs-target=`#allcompleteModal${task.id}`)
+                                  i.fa.fa-check
+                                .modal.fade(tabindex='-1' id=`allcompleteModal${task.id}` aria-labelledby='allcompleteModalLabel' aria-hidden='true')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h5#editModalLabel.modal-title Görev henüz bitmedi mi?
+                                      .modal-body.text-left
+                                        .form
+                                          form.d-flex.justify-content-around(action=`/homepage/complete/${data.id}` method='POST')
+                                            input.d-none(type="text", name="id" value=`${task.id}`)
+                                            .button
+                                              input.btn.btn-success(type="submit", value="Evet") 
+                                            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç
+
+                              if(data)
+                                if(data.isAdmin == true)
+                                  button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#alleditModal${task.id}`)
+                                    i.fa.fa-pen
+                                  .modal.fade(tabindex='-1' id=`alleditModal${task.id}` aria-labelledby='alleditModalLabel' aria-hidden='true')
+                                    .modal-dialog
+                                      .modal-content
+                                        .modal-header
+                                          h5#editModalLabel.modal-title Görevi düzenle
+                                        .modal-body.text-left
+                                          .form
+                                            form(action=`/homepage/update/${data.id}&${task.id}` method='POST')
+                                              .mb-2
+                                                label.form-label(for='task') Görev :
+                                                .inputTags
+                                                  input.form-control.input(type='text' required autocomplete='off' value=`${task.description}` placeholder='Görev açıklaması...' id='task' name='description')
+                                                  button.form-control.font(disabled)
+                                                    i.fa-solid.fa-list-check
+                                              .mb-2
+                                                label.form-label(for='employee') Görevli 
+                                                  sub (Çoklu seçmek için ctrl tuşuna basılı tutarak işaretleyin)
+                                                .inputTags
+                                                  select.list-group(name='employee' id='employee' multiple)
+                                                    each employee in users
+                                                      if(task.employee.includes(employee.fullName))
+                                                        option.list-group-item.active( value=`${employee.fullName}`) #{employee.fullName}
+                                                      else
+                                                        option.list-group-item( value=`${employee.fullName}`) #{employee.fullName}
+
+                                                  button.form-control.font(disabled)
+                                                    i.fa-solid.fa-user-pen
+                                              .button
+                                                input.form-control.input.btn.btn-primary.w-100(type='submit' value='Güncelle')
+                                              
+                                        .modal-footer
+                                          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
+                                  button.border-0.btn-transition.btn.btn-outline-danger(type='button' data-bs-toggle='modal' data-bs-target=`#alldeleteModal${task.id}` )
+                                    i.fa.fa-trash
+                                  .modal.fade(tabindex='-1' id=`alldeleteModal${task.id}` aria-labelledby='alldeleteModalLabel' aria-hidden='true')
+                                    .modal-dialog
+                                      .modal-content
+                                        .modal-header
+                                          h5.modal-title Görevi silmek istediğinize emin misiniz?
+                                        .modal-body.text-left
+                                          .form
+                                            form.d-flex.justify-content-around(action=`/homepage/delete/${data.id}` method='POST')
+                                              input.d-none(type="text", name="id" value=`${task.id}`)
+                                              .button
+                                                input.btn.btn-danger(type="submit", value="Sil") 
+                                              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç
+                                    
+                                button.border-0.btn-transition.btn.btn-outline-secondary(type='button' data-bs-toggle='modal' data-bs-target=`#allinfoModal${task.id}` )
+                                    i.fa-solid.fa-info
+                                .modal.fade(tabindex='-1' id=`allinfoModal${task.id}` aria-labelledby='allinfoModalLabel' aria-hidden='true')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h5#editModalLabel.modal-title Görev Hakkında
+                                      .modal-body.text-left
+                                         .mb-2
+                                            label.form-label(for='task') Başlık :
+                                            .inputTags
+                                              input.form-control.input(type='text' required autocomplete='off' value=`${task.title}` id='task' disabled name='title')
+                                              button.form-control.font(disabled)
+                                                i.fa-solid.fa-list-check
+                                         .mb-2
+                                          label.form-label(for='task') Açıklama :
+                                          .inputTags
+                                            textarea.form-control(name="description" rows='6' disabled) #{task.description}
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-comment-medical
+                                         if (task.photo != "none")
+                                          .mb-2
+                                            label.form-label(for='task') Görev Dosyası :
+                                            .inputTags
+                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                         .mb-2
+                                          label.form-label(for='task') Görevli :
+                                          .inputTags
+                                            input.form-control.input(type='text' required autocomplete='off' value=`${task.employee}` id='task' disabled name='employee')
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-user
+                                      .modal-footer
+                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Kapat
+                    
+                    else
+                      li.list-group-item.bg-light
+                        .todo-indicator.bg-danger
+                        .widget-content.p-0
+                          .widget-content-wrapper
+                            .widget-content-left
+                              .widget-heading
+                                | #{task.title} 
+                              .widget-subheading
+                                i Görevden Sorumlu : #{task.employee}
+                            .widget-content-right
+                              if(task.employee.includes(data.fullName) || data.isAdmin == true)
+                                button.border-0.btn-transition.btn.btn-outline-success(type='button' data-bs-toggle='modal' data-bs-target=`#allcompleteModal${task.id}`)
+                                  i.fa.fa-check
+                                .modal.fade(tabindex='-1' id=`allcompleteModal${task.id}` aria-labelledby='completeModalLabel' aria-hidden='true')
+                                      .modal-dialog
+                                        .modal-content
+                                          .modal-header
+                                            h5#editModalLabel.modal-title Görev tamamlandı mı?
+                                          .modal-body.text-left
+                                            .form
+                                              form.d-flex.justify-content-around(action=`/homepage/complete/${data.id}` method='POST')
+                                                input.d-none(type="text", name="id" value=`${task.id}`)
+                                                .button
+                                                  input.btn.btn-success(type="submit", value="Evet") 
+                                                button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç
+                              if(data)
+                                if(data.isAdmin == true)
+                                  button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#alleditModal${task.id}`)
+                                    i.fa.fa-pen
+                                  .modal.fade(tabindex='-1' id=`alleditModal${task.id}` aria-labelledby='alleditModalLabel' aria-hidden='true')
+                                    .modal-dialog
+                                      .modal-content
+                                        .modal-header
+                                          h5#editModalLabel.modal-title Görevi düzenle
+                                        .modal-body.text-left
+                                          .form
+                                            form(action=`/homepage/update/${data.id}&${task.id}` method='POST')
+                                              .mb-2
+                                                label.form-label(for='task') Görev :
+                                                .inputTags
+                                                  input.form-control.input(type='text' required autocomplete='off' value=`${task.description}` placeholder='Görev açıklaması...' id='task' name='description')
+                                                  button.form-control.font(disabled)
+                                                    i.fa-solid.fa-list-check
+                                              .mb-2
+                                                label.form-label(for='employee') Görevli 
+                                                  sub (Çoklu seçmek için ctrl tuşuna basılı tutarak işaretleyin)
+                                                .inputTags
+                                                  select.list-group(name='employee' id='employee' multiple)
+                                                    each employee in users
+                                                      if(task.employee.includes(employee.fullName))
+                                                        option.list-group-item.active( value=`${employee.fullName}`) #{employee.fullName}
+                                                      else
+                                                        option.list-group-item( value=`${employee.fullName}`) #{employee.fullName}
+                                                        
+                                                  button.form-control.font(disabled)
+                                                      i.fa-solid.fa-user-pen
+                                              .button
+                                                input.form-control.input.btn.btn-primary.w-100(type='submit' value='Güncelle')
+                                              
+                                        .modal-footer
+                                          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
+                                  button.border-0.btn-transition.btn.btn-outline-danger(type='button' data-bs-toggle='modal' data-bs-target=`#alldeleteModal${task.id}` )
+                                    i.fa.fa-trash
+                                  .modal.fade(tabindex='-1' id=`alldeleteModal${task.id}` aria-labelledby='alldeleteModalLabel' aria-hidden='true')
+                                    .modal-dialog
+                                      .modal-content
+                                        .modal-header
+                                          h5#editModalLabel.modal-title Görevi silmek istediğinize emin misiniz?
+                                        .modal-body.text-left
+                                          .form
+                                            form.d-flex.justify-content-around(action=`/homepage/delete/${data.id}` method='POST')
+                                              input.d-none(type="text", name="id" value=`${task.id}`)
+                                              .button
+                                                input.btn.btn-danger(type="submit", value="Sil") 
+                                              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç  
+                                button.border-0.btn-transition.btn.btn-outline-secondary(type='button' data-bs-toggle='modal' data-bs-target=`#allinfoModal${task.id}` )
+                                    i.fa-solid.fa-info
+                                .modal.fade(tabindex='-1' id=`allinfoModal${task.id}` aria-labelledby='allinfoModalLabel' aria-hidden='true')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h5#editModalLabel.modal-title Görev Hakkında
+                                      .modal-body.text-left
+                                         .mb-2
+                                            label.form-label(for='task') Başlık :
+                                            .inputTags
+                                              input.form-control.input(type='text' required autocomplete='off' value=`${task.title}` id='task' disabled name='title')
+                                              button.form-control.font(disabled)
+                                                i.fa-solid.fa-list-check
+                                         .mb-2
+                                          label.form-label(for='task') Açıklama :
+                                          .inputTags
+                                            textarea.form-control(name="description" rows='6' disabled) #{task.description}
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-comment-medical
+                                         if (task.photo != "none")
+                                          .mb-2
+                                            label.form-label(for='task') Görev Dosyası :
+                                            .inputTags
+                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                         .mb-2
+                                          label.form-label(for='task') Görevli :
+                                          .inputTags
+                                            input.form-control.input(type='text' required autocomplete='off' value=`${task.employee}` id='task' disabled name='employee')
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-user
+                                      .modal-footer
+                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Kapat
+        
+                                            
+                ul.list-group.list-group-flush(id='complatedTask')
+                  - var i = 0;
+                  each task in tasks
+                    if(task.complete == true)
+                      li.list-group-item.complated
+                        .todo-indicator.bg-success
+                        .widget-content.p-0
+                          .widget-content-wrapper
+                            .widget-content-left
+                              .widget-heading
+                                | #{task.title}
+                                .badge.badge-success.ml-2 
+                                  | Tamamlandı
+                              .widget-subheading
+                                i Görevden Sorumlu : #{task.employee}
+                            .widget-content-right
+                              if(task.employee.includes(data.fullName) || data.isAdmin == true)
                                 button.border-0.btn-transition.btn.btn-outline-success(type='button' data-bs-toggle='modal' data-bs-target=`#completeModal${task.id}`)
                                   i.fa.fa-check
                                 .modal.fade(tabindex='-1' id=`completeModal${task.id}` aria-labelledby='completeModalLabel' aria-hidden='true')
@@ -71,9 +304,16 @@ block title
                                                   button.form-control.font(disabled)
                                                     i.fa-solid.fa-list-check
                                               .mb-2
-                                                label.form-label(for='employee') Görevli
+                                                label.form-label(for='employee') Görevli 
+                                                  sub (Çoklu seçmek için ctrl tuşuna basılı tutarak işaretleyin)
                                                 .inputTags
-                                                  input.form-control.input(type='text' required value=`${task.employee}`  placeholder='Görevli...' id='employee' name='employee')
+                                                  select.list-group(name='employee' id='employee' multiple)
+                                                    each employee in users
+                                                      if(task.employee.includes(employee.fullName))
+                                                        option.list-group-item.active( value=`${employee.fullName}`) #{employee.fullName}
+                                                      else
+                                                        option.list-group-item( value=`${employee.fullName}`) #{employee.fullName}
+
                                                   button.form-control.font(disabled)
                                                     i.fa-solid.fa-user-pen
                                               .button
@@ -95,22 +335,65 @@ block title
                                               .button
                                                 input.btn.btn-danger(type="submit", value="Sil") 
                                               button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç
+
+                                button.border-0.btn-transition.btn.btn-outline-secondary(type='button' data-bs-toggle='modal' data-bs-target=`#compinfoModal${task.id}` )
+                                    i.fa-solid.fa-info
+                                .modal.fade(tabindex='-1' id=`compinfoModal${task.id}` aria-labelledby='compinfoModalLabel' aria-hidden='true')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h5#editModalLabel.modal-title Görev Hakkında
+                                      .modal-body.text-left
+                                         .mb-2
+                                            label.form-label(for='task') Başlık :
+                                            .inputTags
+                                              input.form-control.input(type='text' required autocomplete='off' value=`${task.title}` id='task' disabled name='title')
+                                              button.form-control.font(disabled)
+                                                i.fa-solid.fa-list-check
+                                         .mb-2
+                                          label.form-label(for='task') Açıklama :
+                                          .inputTags
+                                            textarea.form-control(name="description" rows='6' disabled) #{task.description}
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-comment-medical
+                                         if (task.photo != "none")
+                                          .mb-2
+                                            label.form-label(for='task') Görev Dosyası :
+                                            .inputTags
+                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                         .mb-2
+                                          label.form-label(for='task') Görevli :
+                                          .inputTags
+                                            input.form-control.input(type='text' required autocomplete='off' value=`${task.employee}` id='task' disabled name='employee')
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-user
+                                      .modal-footer
+                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Kapat    
                     
                     else
+                      - i += 1;
+                      if (i == tasks.length)
+                        h3.p-4 Henüz tamamlanan bir görev yok!
+                        
+
+                ul.list-group.list-group-flush(id='notComplatedTask')
+                  - var i = 0;
+                  each task in tasks 
+                    if(task.complete == false)
                       li.list-group-item.bg-light
                         .todo-indicator.bg-danger
                         .widget-content.p-0
                           .widget-content-wrapper
                             .widget-content-left
                               .widget-heading
-                                | #{task.description} 
+                                | #{task.title} 
                               .widget-subheading
                                 i Görevden Sorumlu : #{task.employee}
                             .widget-content-right
-                              if(data.fullName == task.employee || data.isAdmin == true)
-                                button.border-0.btn-transition.btn.btn-outline-success(type='button' data-bs-toggle='modal' data-bs-target=`#completeModal${task.id}`)
+                              if(task.employee.includes(data.fullName) || data.isAdmin == true)
+                                button.border-0.btn-transition.btn.btn-outline-success(type='button' data-bs-toggle='modal' data-bs-target=`#notcompleteModal${task.id}`)
                                   i.fa.fa-check
-                                .modal.fade(tabindex='-1' id=`completeModal${task.id}` aria-labelledby='completeModalLabel' aria-hidden='true')
+                                .modal.fade(tabindex='-1' id=`notcompleteModal${task.id}` aria-labelledby='notcompleteModalLabel' aria-hidden='true')
                                       .modal-dialog
                                         .modal-content
                                           .modal-header
@@ -124,9 +407,9 @@ block title
                                                 button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç
                               if(data)
                                 if(data.isAdmin == true)
-                                  button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#editModal${task.id}`)
+                                  button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#notcompeditModal${task.id}`)
                                     i.fa.fa-pen
-                                  .modal.fade(tabindex='-1' id=`editModal${task.id}` aria-labelledby='editModalLabel' aria-hidden='true')
+                                  .modal.fade(tabindex='-1' id=`notcompeditModal${task.id}` aria-labelledby='notcompeditModalLabel' aria-hidden='true')
                                     .modal-dialog
                                       .modal-content
                                         .modal-header
@@ -141,9 +424,17 @@ block title
                                                   button.form-control.font(disabled)
                                                     i.fa-solid.fa-list-check
                                               .mb-2
-                                                label.form-label(for='employee') Görevli
+                                                label.form-label(for='employee') Görevli 
+                                                  sub (Çoklu seçmek için ctrl tuşuna basılı tutarak işaretleyin)
                                                 .inputTags
-                                                  input.form-control.input(type='text' required value=`${task.employee}`  placeholder='Görevli...' id='employee' name='employee')
+                                                  select.list-group(name='employee' id='employee' multiple)
+                                                    each employee in users
+                                                      if(task.employee.includes(employee.fullName))
+                                                        option.list-group-item.active( value=`${employee.fullName}`) #{employee.fullName}
+                                                      else
+                                                        option.list-group-item( value=`${employee.fullName}`) #{employee.fullName}
+
+
                                                   button.form-control.font(disabled)
                                                     i.fa-solid.fa-user-pen
                                               .button
@@ -151,9 +442,9 @@ block title
                                               
                                         .modal-footer
                                           button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
-                                  button.border-0.btn-transition.btn.btn-outline-danger(type='button' data-bs-toggle='modal' data-bs-target=`#deleteModal${task.id}` )
+                                  button.border-0.btn-transition.btn.btn-outline-danger(type='button' data-bs-toggle='modal' data-bs-target=`#notcompdeleteModal${task.id}` )
                                     i.fa.fa-trash
-                                  .modal.fade(tabindex='-1' id=`deleteModal${task.id}` aria-labelledby='deleteModalLabel' aria-hidden='true')
+                                  .modal.fade(tabindex='-1' id=`notcompdeleteModal${task.id}` aria-labelledby='notcompdeleteModalLabel' aria-hidden='true')
                                     .modal-dialog
                                       .modal-content
                                         .modal-header
@@ -164,12 +455,49 @@ block title
                                               input.d-none(type="text", name="id" value=`${task.id}`)
                                               .button
                                                 input.btn.btn-danger(type="submit", value="Sil") 
-                                              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç        
-                                            
-                                        
-                                            
-                                      
-                  
+                                              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç  
+
+                                button.border-0.btn-transition.btn.btn-outline-secondary(type='button' data-bs-toggle='modal' data-bs-target=`#notcompinfoModal${task.id}` )
+                                    i.fa-solid.fa-info
+                                .modal.fade(tabindex='-1' id=`notcompinfoModal${task.id}` aria-labelledby='notcompdeleteModalLabel' aria-hidden='true')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h5#editModalLabel.modal-title Görev Hakkında
+                                      .modal-body.text-left
+                                         .mb-2
+                                            label.form-label(for='task') Başlık :
+                                            .inputTags
+                                              input.form-control.input(type='text' required autocomplete='off' value=`${task.title}` id='task' disabled name='title')
+                                              button.form-control.font(disabled)
+                                                i.fa-solid.fa-list-check
+                                         .mb-2
+                                          label.form-label(for='task') Açıklama :
+                                          .inputTags
+                                            textarea.form-control(name="description" rows='6' disabled) #{task.description}
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-comment-medical
+                                         if (task.photo != "none")
+                                          .mb-2
+                                            label.form-label(for='task') Görev Dosyası :
+                                            .inputTags
+                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                         .mb-2
+                                          label.form-label(for='task') Görevli :
+                                          .inputTags
+                                            input.form-control.input(type='text' required autocomplete='off' value=`${task.employee}` id='task' disabled name='employee')
+                                            button.form-control.font(disabled)
+                                              i.fa-solid.fa-user
+                                      .modal-footer
+                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Kapat
+                    else
+                      - i += 1;
+                      if (i == tasks.length)
+                        h3.p-4 Tüm görevler tamamlandı, bravo takım :)
+
+        
+
+                
         if(data.isAdmin== true)
           div.d-block.text-center.card-footer
             button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#addModal') Görev Ekle
@@ -180,21 +508,28 @@ block title
                     h5#addModalLabel.modal-title Görev Ekle
                   .modal-body.text-left
                     .form
-                      form(action='' method='POST')
+                      form(action='' enctype="multipart/form-data" method='POST')
                         .mb-2
-                          label.form-label(for='task') Görev :
+                          label.form-label(for='task') Görev Başlığı :
                           .inputTags
-                            input.form-control.input(type='text' required autocomplete='off' placeholder='Görev açıklaması...' id='task' name='description')
+                            input.form-control.input(type='text' required autocomplete='off' placeholder='Görev Başlığı...' id='task' name='title')
                             button.form-control.font(disabled)
                               i.fa-solid.fa-list-check
+                        .mb-2
+                          label.form-label(for='task') Görev Açıklaması :
+                          .inputTags
+                            textarea.form-control(name="description" placeholder='Görev Açıklaması...' required autocomplete='off') 
+                            button.form-control.font(disabled)
+                              i.fa-solid.fa-comment-medical
+                        .mb-2
+                              input(type="file" name="myImage" accept="image/*")
                         .mb-2
                           label.form-label(for='employee') Görevli 
                             sub (Çoklu seçmek için ctrl tuşuna basılı tutarak işaretleyin)
                           .inputTags
-                            select(name='employee' id='employee' multiple)
+                            select.list-group(name='employee' id='employee' multiple)
                               each employee in users
-                                option( value=`${employee.fullName}`) #{employee.fullName}
-                            //- input.form-control.input(type='text' required  placeholder='Görevli...' id='employee' name='employee')
+                                option.list-group-item( value=`${employee.fullName}`) #{employee.fullName}
                             button.form-control.font(disabled)
                               i.fa-solid.fa-user-pen
                         .button
@@ -203,4 +538,4 @@ block title
                   .modal-footer
                     button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
 
-  
+script(src="/js/task.js")
