@@ -4,13 +4,19 @@ const fs = require('fs')
 
 const taskAdd = async (req,res) => {
     const {id} = req.params
+    console.log(req.body)
     try {
-        const _task = await taskModel.findOne({"description" : req.body.description})
+        const _task = await taskModel.findOne({"title" : req.body.title})
         if(typeof(req.body.employee) == 'object'){
             req.body.employee = req.body.employee.join(' , ');
         }
         if(_task) {
             return res.redirect('/homepage/index/'+ id)
+        }
+
+        if(req.body.description == null)
+        {
+            req.body.description = "Açıklama yok"
         }
 
         var photoName = "none"

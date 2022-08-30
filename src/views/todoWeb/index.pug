@@ -133,7 +133,7 @@ block title
                                           .mb-2
                                             label.form-label(for='task') Görev Dosyası :
                                             .inputTags
-                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                              a(href=`/uploads/${task.photo}` target='_blank') Görüntüle
                                          .mb-2
                                           label.form-label(for='task') Görevli :
                                           .inputTags
@@ -243,7 +243,7 @@ block title
                                           .mb-2
                                             label.form-label(for='task') Görev Dosyası :
                                             .inputTags
-                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                              a(href=`/uploads/${task.photo}` target='_blank') Görüntüle
                                          .mb-2
                                           label.form-label(for='task') Görevli :
                                           .inputTags
@@ -360,7 +360,7 @@ block title
                                           .mb-2
                                             label.form-label(for='task') Görev Dosyası :
                                             .inputTags
-                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                              a(href=`/uploads/${task.photo}` target='_blank') Görüntüle
                                          .mb-2
                                           label.form-label(for='task') Görevli :
                                           .inputTags
@@ -481,7 +481,7 @@ block title
                                           .mb-2
                                             label.form-label(for='task') Görev Dosyası :
                                             .inputTags
-                                              img(src=`/uploads/${task.photo}`, alt="alt")
+                                              a(href=`/uploads/${task.photo}` target='_blank') Görüntüle
                                          .mb-2
                                           label.form-label(for='task') Görevli :
                                           .inputTags
@@ -522,12 +522,14 @@ block title
                             button.form-control.font(disabled)
                               i.fa-solid.fa-comment-medical
                         .mb-2
-                              input(type="file" name="myImage" accept="image/*")
+                          label.form-label(for='task') Görev Dosyası :
+                          .inputTags
+                            input(type="file" name="myImage" accept="*")
                         .mb-2
                           label.form-label(for='employee') Görevli 
                             sub (Çoklu seçmek için ctrl tuşuna basılı tutarak işaretleyin)
                           .inputTags
-                            select.list-group(name='employee' id='employee' multiple)
+                            select.list-group(name='employee' id='employee' multiple required)
                               each employee in users
                                 option.list-group-item( value=`${employee.fullName}`) #{employee.fullName}
                             button.form-control.font(disabled)

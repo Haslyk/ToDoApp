@@ -47,3 +47,5 @@ app.listen(port, () => {
     console.log(`Server ${port} portundan çalışıyor `)
 })
 
+
+// popup gelmiyor teamste fotoğraf kısmında

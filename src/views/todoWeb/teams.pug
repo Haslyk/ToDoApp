@@ -7,15 +7,40 @@ block title
     title Teams
     
     include ../main-layouts/navbar.pug 
+    
     section.container
         h1 Yazılım Geliştirme
         hr
         .row
             each data in datas
                 .col-md-3.mb-5.col-sm-6
-                    .our-team 
-                        .pic 
-                            img(src=`/img/${data.photo}`)
+                    .our-team
+                        if(data.id == user.id)
+                            .pic(onmouseover='hover(this.id)' onmouseout='leave(this.id)' id=`${data.id}`)
+                                img(src=`/img/${data.photo}` id=`img${data.id}`)
+                                .card(id=`card${data.id}`)
+                                    .card-body 
+                                        button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#photoModal') Fotoğraf Yükle
+                                        .modal.fade(tabindex='-1' id='photoModal' aria-labelledby='photoModalLabel' aria-hidden='true')
+                                            .modal-dialog
+                                                .modal-content
+                                                    .modal-header
+                                                        h5#photoModalLabel.modal-title Fotoğraf Yükle
+                                                    .modal-body.text-left
+                                                        .form
+                                                            form(action=`/homepage/upload/${data.id}` enctype="multipart/form-data" method='POST')
+                                                                .containerr
+                                                                    img.popupImg(src=`/img/${data.photo}`, alt="alt")
+                                                                    input(type="file" name="profilePhoto" required accept="image/*")
+                                                                    button.btn.btn-primary Fotoğraf Yükle
+
+                                                    
+                                                    .modal-footer
+                                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
+                        else
+                            .pic
+                                img(src=`/img/${data.photo}`)
+                                
                         h3.title #{data.fullName}
                         span.post Developer
                         ul.social
@@ -28,4 +53,7 @@ block title
                             li
                                 a(href=`mailto://${data.mail}` target='_blank')
                                     i.fa-solid.fa-envelope
-            
+                        
+
+
+    script(src="/js/userphoto.js") 

@@ -11,15 +11,27 @@ const storage = multer.diskStorage({
         cb(null, file.originalname)
     }
 })
-const upload = multer({
+const uploadTask = multer({
     storage : storage
+})
+
+const storage2 = multer.diskStorage({
+    destination : (req,file,cb) => {
+        cb(null, 'src/public/img')
+    },
+    filename : (req,file,cb) => {
+        cb(null, file.originalname)
+    }
+})
+const uploadUserPhoto = multer({
+    storage : storage2
 })
 
 
 router.get('/teams/:id', homeController.userGetAll)
 
 router.get('/index/:id', taskController.taskGetAll)
-router.post('/index/:id', upload.single('myImage') ,taskController.taskAdd)
+router.post('/index/:id', uploadTask.single('myImage') ,taskController.taskAdd)
 
 
 router.get('/update/:id', taskController.taskUpdate)
@@ -32,6 +44,7 @@ router.post('/delete/:id', taskController.taskDelete)
 router.get('/complete/:id', taskController.taskComplete)
 router.post('/complete/:id', taskController.taskComplete)
 
+router.post('/upload/:id', uploadUserPhoto.single('profilePhoto'), homeController.userPhoto)
 
 
 

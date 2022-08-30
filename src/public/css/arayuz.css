@@ -271,6 +271,7 @@ i {
     border: 0.5px solid #60c5a8;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 10px 0px,
       rgba(0, 0, 0, 0.5) 0px 2px 25px 0px;
+    transition: all 400ms ease-in-out;
   }
   .our-team .pic {
     display: inline-block;
@@ -334,6 +335,51 @@ i {
     text-decoration: none;
   }
   
+  .our-team .card {
+    display: none;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    animation: fade 300ms ease-in-out;
+  }
+  .our-team .card .card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .containerr {
+    height: 50vh;
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+    flex-direction: column;
+  }
+
+  .containerr .popupImg {
+    border: 1px solid red;
+    box-shadow: 0px 2px 28px 2px #FFA7C1;
+    width: 50%;
+    height: 30vh;
+  }
+
+  .containerr button {
+    width: 50%;
+  }
+
+  @keyframes fade {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+  }
+
   @media only screen and (max-width: 992px) {
     .our-team {
       margin-bottom: 2rem;
