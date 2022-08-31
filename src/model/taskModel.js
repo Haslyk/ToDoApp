@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { integer } = require('vuelidate/lib/validators')
 
 const taskSchema = new mongoose.Schema({
     title : {
@@ -28,6 +29,10 @@ const taskSchema = new mongoose.Schema({
     img : {
         data : Buffer, 
         contentType : String
+    },
+    status : {
+        type : String,
+        default : "0"
     }
     
 }, {collection : "tasks", timestamps: true})

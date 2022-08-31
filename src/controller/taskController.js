@@ -133,8 +133,13 @@ const taskDelete = async (req,res) => {
 const taskComplete = async (req,res) => {
     const { id } = req.params
     try {
+        var status = "0"
         const isComplete = await taskModel.findById(req.body.id)
-        const taskComplete = await taskModel.findByIdAndUpdate(req.body.id, {complete : !isComplete.complete})
+        if(isComplete.complete == false){
+            status = "3"
+        }
+
+        const taskComplete = await taskModel.findByIdAndUpdate(req.body.id, {complete : !isComplete.complete, status : status})
         if(taskComplete) {
             return res.redirect('/homepage/index/' + id)
         }
@@ -171,6 +176,38 @@ const taskComplete = async (req,res) => {
 //     })
 // }
 
+const statusUpdate = async (req,res) => {
+    const { id } = req.params
+    console.log(req.body.status)
+    console.log(id)
+    try {
+
+        if(req.body.status == "3")
+        {
+            
+        const statusUpdate = await taskModel.findByIdAndUpdate(id, {complete : true , status : req.body.status})
+        }
+        else {
+            const statusUpdate = await taskModel.findByIdAndUpdate(id, {status : req.body.status})
+        }
+        
+        console.log(statusUpdate)
+
+        if(statusUpdate) {
+            return res.redirect('/homepage/index/' + req.session.userId)
+        }
+        else {
+            return res.redirect('/homepage/index/'+ req.session.userId)
+        } 
+
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            message : "Güncellenemedi"
+        })
+    }
+}
+
 
 
 module.exports = {
@@ -180,4 +217,5 @@ module.exports = {
     taskDelete,
     taskComplete,
     // taskfileUpload
+    statusUpdate
 }

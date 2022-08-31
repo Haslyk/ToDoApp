@@ -101,9 +101,11 @@ i {
 
 .card-header.card-header-tab .card-header-title {
     display: flex;
-    width: 50%;
     align-items: center;
     white-space: nowrap;
+}
+.menus button {
+    margin-right: 2%;
 }
 
 .card-header ul {
@@ -127,13 +129,10 @@ i {
     overflow-x: hidden;
 }
 
-#complatedTask {
+#complatedTask , #notComplatedTask, #processingTask ,#notStartedTask {
     display: none;
 }
 
-#notComplatedTask {
-    display: none;
-}
 
 .list-group-item {
     position: relative;
@@ -150,6 +149,11 @@ i {
     padding-left: 0;
     margin-bottom: 0;
 }
+
+.taskGroup {
+    animation : fade 600ms ease-out;
+}
+
 
 .todo-indicator {
     position: absolute;
@@ -255,7 +259,22 @@ i {
 }
 
 
+/* Status Popup */
 
+.statusForm {
+    width: 100%;
+}
+
+.statusForm .mb2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.statusForm select {
+    width: 60%;
+    padding: 3% 2%;
+}
 
 
 

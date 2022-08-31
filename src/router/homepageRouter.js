@@ -46,6 +46,8 @@ router.post('/complete/:id', taskController.taskComplete)
 
 router.post('/upload/:id', uploadUserPhoto.single('profilePhoto'), homeController.userPhoto)
 
+router.post('/status/:id', taskController.statusUpdate)
+
 
 
 // router.post("/uploadphoto/:id" , upload.single('myImage'),taskController.taskfileUpload)

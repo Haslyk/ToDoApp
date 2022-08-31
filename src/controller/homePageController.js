@@ -25,10 +25,10 @@ const userPhoto = async (req,res) => {
         
         const userPhoto = await userModel.findByIdAndUpdate(id , {photo : req.file.filename})
         if(userPhoto) {
-            return res.redirect('/homepage/index/' + id)
+            return res.redirect('/homepage/teams/' + id)
         }
         else {
-            return res.redirect('/homepage/index/'+ id)
+            return res.redirect('/homepage/teams/'+ id)
         } 
 
     } catch (error) {
