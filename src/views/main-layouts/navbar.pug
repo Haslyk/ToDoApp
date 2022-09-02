@@ -8,17 +8,17 @@ nav.navbar.navbar-expand-lg.bg-light
             a(href=`/homepage/index/${id}`)
               i.fa-solid.fa-clipboard-list
               | &nbsp; Görevler
+          if(data)
+            if(data.isAdmin == true)
+                li.list-group-item
+                  a(href=`/homepage/status/${id}`)
+                    i.fa-sharp.fa-solid.fa-list-check
+                    | &nbsp; Durumlar
           li.list-group-item
             a(href=`/homepage/teams/${id}`)
               i.fa-solid.fa-people-group
               | &nbsp; Ekibim
           li.list-group-item
-            if datas
-              each data in datas
-                if id == data._id
-                  a(href='#') Merhaba, #{data.fullName}  &nbsp;
-                    a(href='/login')
-                      i.fa-solid.fa-arrow-right-from-bracket
             if data
               a(href='#') Merhaba, #{data.fullName} &nbsp; 
                   a(href="/login")

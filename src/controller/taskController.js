@@ -1,10 +1,10 @@
 const taskModel = require('../model/taskModel')
 const userModel = require('../model/userModel')
+const statusModel = require('../model/statusModel')
 const fs = require('fs')
 
 const taskAdd = async (req,res) => {
     const {id} = req.params
-    console.log(req.body)
     try {
         const _task = await taskModel.findOne({"title" : req.body.title})
         if(typeof(req.body.employee) == 'object'){
@@ -19,24 +19,17 @@ const taskAdd = async (req,res) => {
             req.body.description = "Açıklama yok"
         }
 
-        var photoName = "none"
+        var fileName = "none"
         if(req.file)
         {
-            var img = fs.readFileSync(req.file.path);
-            var encode_img = img.toString('base64');
-            var final_img = {
-                contentType:req.file.mimetype,
-                image:new Buffer(encode_img,'base64'),
-                name : req.file.filename
-            };
-            photoName = req.file.filename
+            fileName = req.file.filename
         }
         
         const taskAdd = new taskModel({
             title : req.body.title ,
             description : req.body.description,
             employee : req.body.employee,
-            photo : photoName
+            file : fileName
         })
 
         await taskAdd.save()
@@ -57,21 +50,16 @@ const taskGetAll = async (req,res) => {
     if(!req.session.userId){
         res.redirect('/login')
     }
+
     try {
         const userGetAll = await userModel.find({})
+        const statusGetAll = await statusModel.find({})
+        const activeStatus = await statusModel.findOne({active : true})
         const taskGetAll = await taskModel.find({}).sort({updatedAt : -1})
         const userGet = await userModel.findById(id)
 
-        var checkEmployee = null
-
-        for(let i = 0; i < taskGetAll.length; i++) {
-           if(taskGetAll[i].employee.includes(userGet.fullName) == true) {
-            checkEmployee = taskGetAll[i].employee.includes(userGet.fullName)
-           }
-        }
-
-
-        return res.render('todoWeb/index' , {id : id , data : userGet , tasks : taskGetAll, users : userGetAll, session: req.session} )
+        return res.render('todoWeb/index' , {id : id , data : userGet , tasks : taskGetAll, users : userGetAll, allStatus : statusGetAll, activeStat : activeStatus} )
+        
         
     } catch (error) {
         return res.status(500).json({
@@ -116,6 +104,16 @@ const taskUpdate = async (req,res) => {
 const taskDelete = async (req,res) => {
     const { id } = req.params
     try {
+        const task = await taskModel.findById(req.body.id)
+        console.log(task)
+        if(task.file != "none")
+        {
+            fs.unlink('uploads/' + task.file, function(err) {
+                if(err) throw err
+                console.log("delete!")
+            })
+        }
+
         const taskDelete = await taskModel.findByIdAndDelete(req.body.id)
         if(taskDelete) {
             return res.redirect('/homepage/index/' + id)
@@ -155,42 +153,20 @@ const taskComplete = async (req,res) => {
     }
 } 
 
-// const taskfileUpload = (req,res) => {
-//     const { id } = req.params
-//     var img = fs.readFileSync(req.file.path);
-//     var encode_img = img.toString('base64');
-//     var final_img = {
-//         contentType:req.file.mimetype,
-//         image:new Buffer(encode_img,'base64'),
-//         name : req.file.filename
-//     };
-//     imgModel.create(final_img,function(err,result){
-//         if(err){
-//             console.log(err);
-//         }else{
-//             console.log(result.img.Buffer);
-//             console.log("Saved To database");
-//             res.contentType(final_img.contentType);
-//             res.redirect('/homepage/index/' + id)
-//         }
-//     })
-// }
 
 const statusUpdate = async (req,res) => {
     const { id } = req.params
-    console.log(req.body.status)
-    console.log(id)
     try {
 
-        if(req.body.status == "3")
-        {
-            
-        const statusUpdate = await taskModel.findByIdAndUpdate(id, {complete : true , status : req.body.status})
+        var statusUpdate = {}
+
+        if(req.body.status == "Tamamlandı") {
+            statusUpdate = await taskModel.findByIdAndUpdate(id, {status : req.body.status, complete : true})
         }
         else {
-            const statusUpdate = await taskModel.findByIdAndUpdate(id, {status : req.body.status})
+            statusUpdate = await taskModel.findByIdAndUpdate(id, {status : req.body.status})
         }
-        
+
         console.log(statusUpdate)
 
         if(statusUpdate) {

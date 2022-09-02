@@ -1,4 +1,5 @@
 const userModel = require('../model/userModel')
+const statusModel = require('../model/statusModel')
 
 const userAdd = async (req,res) => {
     try {
@@ -31,6 +32,9 @@ const userCheck = async (req,res) => {
         if(_user){
             if(_user.password == req.body.password) {
                 req.session.userId = _user._id
+                await statusModel.findOneAndUpdate({active : true}, {active : false})
+                await statusModel.findOneAndUpdate({name : "Tümünü Gör"}, {active : true})
+                console.log("Giriş Yapıldı")
                 return res.redirect('/homepage/index/' + req.session.userId)
             }
             else {

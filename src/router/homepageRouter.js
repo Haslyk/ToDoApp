@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const taskController = require('../controller/taskController')
 const homeController = require('../controller/homePageController')
+const statusController = require('../controller/statusController')
 const multer = require('multer')
 
 const storage = multer.diskStorage({
@@ -31,26 +32,26 @@ const uploadUserPhoto = multer({
 router.get('/teams/:id', homeController.userGetAll)
 
 router.get('/index/:id', taskController.taskGetAll)
-router.post('/index/:id', uploadTask.single('myImage') ,taskController.taskAdd)
 
 
-router.get('/update/:id', taskController.taskUpdate)
+router.post('/add/:id', uploadTask.single('myImage') ,taskController.taskAdd)
 router.post('/update/:id', taskController.taskUpdate)
-
-
-router.get('/delete/:id', taskController.taskDelete)
 router.post('/delete/:id', taskController.taskDelete)
-
-router.get('/complete/:id', taskController.taskComplete)
 router.post('/complete/:id', taskController.taskComplete)
 
 router.post('/upload/:id', uploadUserPhoto.single('profilePhoto'), homeController.userPhoto)
 
-router.post('/status/:id', taskController.statusUpdate)
+router.post('/taskStatusUpdate/:id', taskController.statusUpdate)
+
+router.get('/status/:id', statusController.statusGetAll)
+
+router.post('/status/:id', statusController.statusAdd)
+router.post('/statusUpdate/:id', statusController.statusUpdate)
+router.post('/statusDelete/:id', statusController.statusDelete)
+router.post('/statusPage/:id', statusController.statusActiveUpdate)
 
 
 
-// router.post("/uploadphoto/:id" , upload.single('myImage'),taskController.taskfileUpload)
 
 
 

@@ -19,7 +19,7 @@ body {
 }
 
 .menu {
-    width: 50%;
+    width: 65%;
 }
 
 .menu ul {
@@ -307,6 +307,7 @@ i {
   }
   .pic img {
     width: 100%;
+    background-position: center;
     height: 240px;
     border-radius: 50%;
   }

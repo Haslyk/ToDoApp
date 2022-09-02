@@ -12,13 +12,13 @@ block title
         h1 Yazılım Geliştirme
         hr
         .row
-            each data in datas
+            each user in datas
                 .col-md-3.mb-5.col-sm-6
                     .our-team
                         if(data.id == user.id)
-                            .pic(onmouseover='hover(this.id)' onmouseout='leave(this.id)' id=`${data.id}`)
-                                img(src=`/img/${data.photo}` id=`img${data.id}`)
-                                .card(id=`card${data.id}`)
+                            .pic(onmouseover='hover(this.id)' onmouseout='leave(this.id)' id=`${user.id}`)
+                                img(src=`/img/${user.photo}` id=`img${user.id}`)
+                                .card(id=`card${user.id}`)
                                     .card-body 
                                         button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#photoModal') Fotoğraf Yükle
                                         .modal.fade(tabindex='-1' id='photoModal' aria-labelledby='photoModalLabel' aria-hidden='true')
@@ -28,9 +28,9 @@ block title
                                                         h5#photoModalLabel.modal-title Fotoğraf Yükle
                                                     .modal-body.text-left
                                                         .form
-                                                            form(action=`/homepage/upload/${data.id}` enctype="multipart/form-data" method='POST')
+                                                            form(action=`/homepage/upload/${user.id}` enctype="multipart/form-data" method='POST')
                                                                 .containerr
-                                                                    img.popupImg(src=`/img/${data.photo}`, alt="alt")
+                                                                    img.popupImg(src=`/img/${user.photo}`, alt="alt")
                                                                     input(type="file" name="profilePhoto" required accept="image/*")
                                                                     button.btn.btn-primary Fotoğraf Yükle
 
@@ -39,19 +39,19 @@ block title
                                                         button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
                         else
                             .pic
-                                img(src=`/img/${data.photo}`)
+                                img(src=`/img/${user.photo}`)
                                 
-                        h3.title #{data.fullName}
+                        h3.title #{user.fullName}
                         span.post Developer
                         ul.social
                             li
-                                a(href=`https://${data.linkedinLink}` target='_blank')
+                                a(href=`https://${user.linkedinLink}` target='_blank')
                                     i.fa-brands.fa-linkedin
                             li
-                                a(href=`https://${data.githubLink}` target='_blank')
+                                a(href=`https://${user.githubLink}` target='_blank')
                                     i.fa-brands.fa-github
                             li
-                                a(href=`mailto://${data.mail}` target='_blank')
+                                a(href=`mailto://${user.mail}` target='_blank')
                                     i.fa-solid.fa-envelope
                         
 

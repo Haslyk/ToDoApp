@@ -1,0 +1,97 @@
+include ../main-layouts/header.pug
+
+
+block cssLink 
+  link(rel='stylesheet' href='/css/arayuz.css')
+
+block title 
+  title Anasayfa
+ 
+  include ../main-layouts/navbar.pug  
+
+  .d-flex.justify-content-center.container
+    .col-md-12
+        .card-hover-shadow-2x.mb-3.card
+            .card-header-tab.card-header.h-10
+                .card-header-title.font-size-lg.text-capitalize.font-weight-normal.p-3
+                    i.fa.fa-tasks
+                    | &nbsp; Durum Listesi
+            .scroll-area-sm
+                perfect-scrollbar.ps-show-limits
+                    .ps.ps--active-y(style='position: static')
+                        .ps-content
+                            ul.list-group.list-group-flush.taskGroup(id='allTask')
+                                each status in statusDatas 
+
+                                    li.list-group-item
+                                        .todo-indicator.bg-info
+                                        .widget-content.p-0
+                                            .widget-content-wrapper
+                                                .widget-content-left
+                                                    .widget-heading
+                                                        | #{status.name}
+                                                .widget-content-right
+
+                                                    if(data.isAdmin == true)
+
+                                                        button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#alleditModal${status.id}`)
+                                                            i.fa.fa-pen
+                                                        .modal.fade(tabindex='-1' id=`alleditModal${status.id}` aria-labelledby='alleditModalLabel' aria-hidden='true')
+                                                            .modal-dialog
+                                                                .modal-content
+                                                                    .modal-header
+                                                                        h5#editModalLabel.modal-title Durumu düzenle
+                                                                    .modal-body.text-left
+                                                                        .form
+                                                                            form(action=`/homepage/statusUpdate/${data.id}` method='POST')
+                                                                                .mb-2
+                                                                                    label.form-label(for='task') Durum :
+                                                                                    .inputTags
+                                                                                        input.form-control.input(type='text' required autocomplete='off' value=`${status.name}` id='task' name='name')
+                                                                                        input.d-none(type='text' name='id' value=`${status.id}`)
+                                                                                        button.form-control.font(disabled)
+                                                                                            i.fa-solid.fa-list-check
+                                                                                .button
+                                                                                    input.form-control.input.btn.btn-primary.w-100(type='submit' value='Güncelle')
+                                                                            
+                                                                    .modal-footer
+                                                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
+
+                                                        button.border-0.btn-transition.btn.btn-outline-danger(type='button' data-bs-toggle='modal' data-bs-target=`#alldeleteModal${status.id}` )
+                                                            i.fa.fa-trash
+                                                        .modal.fade(tabindex='-1' id=`alldeleteModal${status.id}` aria-labelledby='alldeleteModalLabel' aria-hidden='true')
+                                                            .modal-dialog
+                                                                .modal-content
+                                                                    .modal-header
+                                                                        h5.modal-title Durumu silmek istediğinize emin misiniz?
+                                                                    .modal-body.text-left
+                                                                        .form
+                                                                            form.d-flex.justify-content-around(action=`/homepage/statusDelete/${data.id}` method='POST')
+                                                                                input.d-none(type="text", name="id" value=`${status.id}`)
+                                                                                .button
+                                                                                    input.btn.btn-danger(type="submit", value="Sil") 
+                                                                                button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç
+                                    
+                                
+            
+            .d-block.text-center.card-footer
+                button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#addModal') Durum Ekle
+                #addModal.modal.fade(tabindex='-1' aria-labelledby='addModalLabel' aria-hidden='true')
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                h5#addModalLabel.modal-title Durum Ekle
+                            .modal-body.text-left
+                                .form
+                                    form(action='' method='POST')
+                                        .mb-2
+                                            label.form-label(for='task') Durum Başlığı :
+                                            .inputTags
+                                                input.form-control.input(type='text' required autocomplete='off' placeholder='Durum Başlığı...' id='task' name='name')
+                                                button.form-control.font(disabled)
+                                                    i.fa-solid.fa-list-check
+                                        .button
+                                        input.form-control.input.btn.btn-primary.w-100(type='submit' value='Ekle')
+                                        
+                                .modal-footer
+                                    button.btn.btn-secondary(type='button' data-bs-dismiss='modal') İptal
