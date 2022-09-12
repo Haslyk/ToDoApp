@@ -32,7 +32,7 @@ block title
                                                         | #{status.name}
                                                 .widget-content-right
 
-                                                    if(data.isAdmin == true)
+                                                    if(data.isAdmin == true && (status.name != "Tümünü Gör" && status.name != "Süresi Doldu"))
 
                                                         button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#alleditModal${status.id}`)
                                                             i.fa.fa-pen
@@ -49,8 +49,6 @@ block title
                                                                                     .inputTags
                                                                                         input.form-control.input(type='text' required autocomplete='off' value=`${status.name}` id='task' name='name')
                                                                                         input.d-none(type='text' name='id' value=`${status.id}`)
-                                                                                        button.form-control.font(disabled)
-                                                                                            i.fa-solid.fa-list-check
                                                                                 .button
                                                                                     input.form-control.input.btn.btn-primary.w-100(type='submit' value='Güncelle')
                                                                             
@@ -88,8 +86,6 @@ block title
                                             label.form-label(for='task') Durum Başlığı :
                                             .inputTags
                                                 input.form-control.input(type='text' required autocomplete='off' placeholder='Durum Başlığı...' id='task' name='name')
-                                                button.form-control.font(disabled)
-                                                    i.fa-solid.fa-list-check
                                         .button
                                         input.form-control.input.btn.btn-primary.w-100(type='submit' value='Ekle')
                                         

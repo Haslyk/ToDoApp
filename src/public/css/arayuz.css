@@ -248,15 +248,9 @@ i {
     display: flex;
 }
 .modal-body .inputTags input, .modal-body .inputTags select {
-    width: 90%;
-}
-.modal-body .inputTags button {
-    width: 10%;
-}
-.modal-body .inputTags img {
     width: 100%;
-    height: 200px;
 }
+
 
 
 /* Status Popup */

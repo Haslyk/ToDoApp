@@ -110,6 +110,9 @@ const statusActiveUpdate = async (req,res) => {
 const statusDelete = async (req,res) => {
     const { id } = req.params
     try {
+
+        await statusModel.findOneAndUpdate({active : false}, {active : true})
+
         const status = await statusModel.findById(req.body.id)
         const task = await taskModel.find({status : status.name})
 

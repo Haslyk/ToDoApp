@@ -32,6 +32,15 @@ const taskSchema = new mongoose.Schema({
     status : {
         type : String,
         default : "Durum Atanmadı"
+    },
+    importance : {
+        type : Boolean,
+        default : false,
+        trim : true
+    },
+    finishDate : {
+        type : Array,
+        required : true
     }
     
 }, {collection : "tasks", timestamps: true})

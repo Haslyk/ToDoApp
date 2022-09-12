@@ -4,19 +4,27 @@ const homeController = require('../controller/homePageController')
 const statusController = require('../controller/statusController')
 const multer = require('multer')
 
-const storage = multer.diskStorage({
+// const Grid = require('gridfs-stream');
+//  const {GridFsStorage } = require('multer-gridfs-storage');
+//  const url = 'mongodb://localhost:27017/ToDoApp'
+
+//  const storage = new GridFsStorage({ url });
+
+
+
+const storageFile = multer.diskStorage({
     destination : (req,file,cb) => {
         cb(null, 'uploads')
     },
     filename : (req,file,cb) => {
-        cb(null, file.originalname)
+        cb(null, req.body.imgId + file.originalname)
     }
 })
 const uploadTask = multer({
-    storage : storage
+    storage : storageFile
 })
 
-const storage2 = multer.diskStorage({
+const storageUserPhoto = multer.diskStorage({
     destination : (req,file,cb) => {
         cb(null, 'src/public/img')
     },
@@ -25,7 +33,7 @@ const storage2 = multer.diskStorage({
     }
 })
 const uploadUserPhoto = multer({
-    storage : storage2
+    storage : storageUserPhoto
 })
 
 
@@ -49,9 +57,6 @@ router.post('/status/:id', statusController.statusAdd)
 router.post('/statusUpdate/:id', statusController.statusUpdate)
 router.post('/statusDelete/:id', statusController.statusDelete)
 router.post('/statusPage/:id', statusController.statusActiveUpdate)
-
-
-
 
 
 
