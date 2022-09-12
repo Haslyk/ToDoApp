@@ -86,13 +86,20 @@ const taskGetAll = async (req,res) => {
         ]
         const date = dateArr.join('-')
         const time = timeArr.join(':')
-    
+        
 
         const userGetAll = await userModel.find({})
         const userGet = await userModel.findById(id)
         const statusGetAll = await statusModel.find({})
         const activeStatus = await statusModel.findOne({active : true})
         const taskGetAll = await taskModel.find({}).sort({complete : 1 ,importance : -1, updatedAt : -1})
+
+        for (let i = 0; i < taskGetAll.length; i++) {
+            if(taskGetAll[i].complete == false && (taskGetAll[i].finishDate[0] == date && taskGetAll[i].finishDate[1] < time))
+            {
+                await taskModel.findByIdAndUpdate(taskGetAll[i].id, {status : "Süresi Doldu"})
+            }
+        }
 
         return res.render('todoWeb/index' , {id : id , data : userGet , tasks : taskGetAll, users : userGetAll ,allStatus : statusGetAll, activeStat : activeStatus, date: date, time: time} )
         

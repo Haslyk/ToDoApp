@@ -37,6 +37,7 @@ block title
                   - var id = 1;
                   each task in tasks
                     if(activeStat.name != "Tümünü Gör")
+
                       if(task.status == activeStat.name)
                         if(task.complete == true)
 
@@ -138,19 +139,19 @@ block title
                                 .widget-content-left
                                   .widget-heading
                                     | #{task.title}
-                                    if(task.finishDate[0] == date && time <= task.finishDate[1])
-                                    .badge.badge-info.ml-2 
-                                      | Bugün bitmesi gerekiyor!
-                                  if((task.finishDate[0] == date && time > task.finishDate[1]) || task.finishDate[0] < date)
-                                    .badge.badge-danger.ml-2 
-                                      | Görev süresi doldu!
+                                    if((task.finishDate[0] == date) && (time <= task.finishDate[1]))
+                                      .badge.badge-info.ml-2 
+                                        | Bugün bitmesi gerekiyor!
+                                    if((task.finishDate[0] == date && time > task.finishDate[1]) || task.finishDate[0] < date)
+                                      .badge.badge-danger.ml-2 
+                                        | Görev süresi doldu!
                                   .widget-subheading
                                     i Görevden Sorumlu : #{task.employee}
                                   .widget-subheading
                                     i Son Teslim Tarihi : #{task.finishDate[0]} , #{task.finishDate[1]}
                                 .widget-content-right
 
-                                  if(task.employee.includes(data.fullName) || data.isAdmin == true)
+                                  if((task.employee.includes(data.fullName) || data.isAdmin == true) && task.status != "Süresi Doldu")
 
                                     button.border-0.btn-transition.btn.btn-outline-info(type='button' data-bs-toggle='modal' data-bs-target=`#allstatusModal${task.id}`)
                                       i.fa-solid.fa-play
@@ -173,7 +174,7 @@ block title
                                 
                                   if(data)
 
-                                    if(data.isAdmin == true)
+                                    if(data.isAdmin == true && task.status != "Süresi Doldu")
 
                                       button.border-0.btn-transition.btn.btn-outline-warning(type='button' data-bs-toggle='modal' data-bs-target=`#alleditModal${task.id}`)
                                         i.fa.fa-pen
@@ -390,7 +391,7 @@ block title
                                     i Son Teslim Tarihi : #{task.finishDate[0]} , #{task.finishDate[1]}
                               .widget-content-right
 
-                                if(task.employee.includes(data.fullName) || data.isAdmin == true)
+                                if((task.employee.includes(data.fullName) || data.isAdmin == true) && task.status != "Süresi Doldu")
 
                                   button.border-0.btn-transition.btn.btn-outline-info(type='button' data-bs-toggle='modal' data-bs-target=`#allstatusModal${task.id}`)
                                     i.fa-solid.fa-play
@@ -405,6 +406,8 @@ block title
                                               select.form-select.w-80(name='status' id='status') 
                                                 each status in allStatus
                                                   if(status.name == "Tümünü Gör")
+                                                    continue
+                                                  else if (status.name == "Süresi Doldu")
                                                     continue
                                                   else
                                                     if(task.status == status.name)
@@ -476,45 +479,45 @@ block title
                                                 .button
                                                   input.btn.btn-danger(type="submit", value="Sil") 
                                                 button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Vazgeç  
-                                  button.border-0.btn-transition.btn.btn-outline-secondary(type='button' data-bs-toggle='modal' data-bs-target=`#allinfoModal${task.id}` )
-                                      i.fa-solid.fa-info.fa-beat
-                                  .modal.fade(tabindex='-1' id=`allinfoModal${task.id}` aria-labelledby='allinfoModalLabel' aria-hidden='true')
-                                    .modal-dialog
-                                      .modal-content
-                                        .modal-header
-                                          h5#editModalLabel.modal-title Görev Hakkında
-                                        .modal-body.text-left
-                                          .mb-2
-                                              label.form-label(for='task') Başlık :
-                                              .inputTags
-                                                input.form-control.input(type='text' required autocomplete='off' value=`${task.title}` id='task' disabled name='title')
-                                          .mb-2
-                                            label.form-label(for='task') Açıklama :
+                                button.border-0.btn-transition.btn.btn-outline-secondary(type='button' data-bs-toggle='modal' data-bs-target=`#allinfoModal${task.id}` )
+                                    i.fa-solid.fa-info.fa-beat
+                                .modal.fade(tabindex='-1' id=`allinfoModal${task.id}` aria-labelledby='allinfoModalLabel' aria-hidden='true')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h5#editModalLabel.modal-title Görev Hakkında
+                                      .modal-body.text-left
+                                        .mb-2
+                                            label.form-label(for='task') Başlık :
                                             .inputTags
-                                              textarea.form-control(name="description" rows='6' disabled) #{task.description}
-                                          if (task.file != "none")
-                                            .mb-2
-                                              label.form-label(for='task') Görev Dosyası :
-                                              .inputTags
-                                                a(href=`/uploads/${task.file}` target='_blank') Görüntüle
-                                          .mb-2 
-                                            label.form-label Görev Önceliği :
-                                            if(task.importance == true)
-                                              b Öncelikli
-                                            if(task.importance == false)
-                                              b Öncelikli Değil
-                                          .mb-1.d-flex
-                                            p.form-label Görev Durumu :
-                                              b #{task.status}
+                                              input.form-control.input(type='text' required autocomplete='off' value=`${task.title}` id='task' disabled name='title')
+                                        .mb-2
+                                          label.form-label(for='task') Açıklama :
+                                          .inputTags
+                                            textarea.form-control(name="description" rows='6' disabled) #{task.description}
+                                        if (task.file != "none")
+                                          .mb-2
+                                            label.form-label(for='task') Görev Dosyası :
+                                            .inputTags
+                                              a(href=`/uploads/${task.file}` target='_blank') Görüntüle
+                                        .mb-2 
+                                          label.form-label Görev Önceliği :
+                                          if(task.importance == true)
+                                            b Öncelikli
+                                          if(task.importance == false)
+                                            b Öncelikli Değil
+                                        .mb-1.d-flex
+                                          p.form-label Görev Durumu :
+                                            b #{task.status}
 
-                                          .mb-2
-                                            label.form-label(for='task') Görevli :
-                                            .inputTags
-                                              input.form-control.input(type='text' required autocomplete='off' value=`${task.employee}` id='task' disabled name='employee')
-                                          .mb-2 
-                                              label.form-label Görev Bitiş Tarihi : #{task.finishDate[0]} |-| #{task.finishDate[1]}
-                                        .modal-footer
-                                          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Kapat
+                                        .mb-2
+                                          label.form-label(for='task') Görevli :
+                                          .inputTags
+                                            input.form-control.input(type='text' required autocomplete='off' value=`${task.employee}` id='task' disabled name='employee')
+                                        .mb-2 
+                                            label.form-label Görev Bitiş Tarihi : #{task.finishDate[0]} |-| #{task.finishDate[1]}
+                                      .modal-footer
+                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Kapat
                                 
                               - id += 1;
                       
